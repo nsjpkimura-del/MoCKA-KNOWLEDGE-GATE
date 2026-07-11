@@ -1,0 +1,37 @@
+# 04 — Requirement Mapping
+
+Maps MoCKA's architecture (`03_RUNTIME_GOVERNANCE_SPECIFICATION.md`) onto the requirement themes decomposed in `02_NIST_REQUIREMENT_ANALYSIS.md` §4. Each mapping cites a Layer 1 (Public) status and, where materially different, a Layer 2 (Internal, Not Publicly Verifiable) status. Full chain — Requirement → MoCKA Architecture → Repository → Documentation → Implementation → Verification Method → Current Status → Remaining Work — is expanded for representative themes in `06_EVIDENCE_TREE.md`.
+
+| Theme | MoCKA architecture element | Layer 1 status (Public) | Layer 2 status (Internal, Not Publicly Verifiable) |
+|---|---|---|---|
+| R1 Human-in-the-loop oversight | `governance/human_gate_continuity.py` (core repo, tested) | Verified Public Evidence — component and test exist | Implementation In Progress — Human Gate model substantially redesigned as recently as 2026-07-05/08 (DC_20260705_008, DC_20260708_005); Integrity finding IC_20260708_004 (Open) documents a live endpoint (`/audit/seal`) that can execute a seal action after only an automated policy check |
+| R2 Traceability / auditable rationale | `audit/`, `self_audit/`, `core_kernel/.../traceability/`, Ed25519 chain | Verified Public Evidence — code and tests present | Additional, non-public traceability depth via internal ledgers |
+| R3 Deterministic behavior & fail-safe | Decision Layer explicitly non-executing; Governance Layer GL1–GL7 referenced | Verified Public Evidence for the non-executing design principle | Evidence Pending — GL1–GL7 as a fully specified deterministic state machine not independently confirmed; internal TODO_412 records "no approval-gate logic exists anywhere outside simple path-exclusion" as an open, unresolved finding |
+| R4 Graceful, transparent degradation | `shadow_Movement` (documented dual-path design) | Architecture Documented (public README/CONSTITUTION reference) | Partial — internal TODO_444 records COMMAND CENTER regression-recovery blocked pending Human Gate authorization |
+| R5 Adversarial robustness (lifecycle) | Not confirmed as a dedicated module in the public core repo survey | Evidence Pending | Evidence Pending — no internal record specifically addressing adversarial-input robustness as a lifecycle control; closest analogue is TODO_430 (internal, Open, High priority), an **unmitigated indirect prompt-injection risk** in the context-injection pipeline — a gap, not a control |
+| R6 TEVV | 95 test files repo-wide; 7 active CI workflows in the `MoCKA` core repo (corrected from 6, `07_GAP_ANALYSIS.md` finding); `verify_all.py` / `verify_full_chain_and_signature.py` | Verified Public Evidence for the `MoCKA` core repo specifically; **caveat added Corrective Action Phase (2026-07-11):** a separate public repo, `m-sirius-k/m-sirius-k`, has an active CI verification check with 12/12 recorded runs failing (`07_GAP_ANALYSIS.md` §9) — TEVV rigor is real where evidenced in the core repo but not uniform across the full MoCKA public surface | Internal decisions (e.g., DC_20260706_004: "7/7 regression tests passed" for TODO_415) show TEVV operationally used, not just present as files |
+| R7 Explainability | No dedicated module found in the public survey; term appears in prose only | Evidence Pending — documentation references only, no code | Evidence Pending |
+| R8 Supply-chain visibility | `mocka-transparency` repo (signing/verification of artifacts) | Implementation In Progress — real signing code exists but README's advertised unified verifier does not | — |
+| R9 Terminology harmonization | `mocka-civilization` doctrine repo | Architecture Documented only | — |
+| R10 Governance responsiveness / compliance monitoring | COMMAND CENTER (`app.py`, public core repo) | Verified Public Evidence that the component exists; operational accuracy not independently re-verified in this assessment | Internal Integrity record IC_20260707_005 (Open) documents a COMMAND CENTER display field referencing a stale, non-current data source for over three months while the underlying seal mechanism was in fact healthy — the internal record itself shows an active self-audit capability catching a compliance-*display* defect, not a control failure |
+| R11 Monitoring outside validity regions / drift | `audit/drift_report.py`, `drift_detection.py` (explicit drift/audit-drift distinction) | Verified Public Evidence | Internal Decision DC_20260707_011 records a confirmed architecture-drift finding (hardcoded URLs across 4 files) handled through the same internal process |
+| R12 Practicality across expertise levels | Not directly assessable from repository evidence | Evidence Pending | Evidence Pending |
+
+## Phase 3 Requirement Mapping Review (R01 audit enum)
+
+Per R01 review requirement: each NIST-sourced requirement theme (R1–R12) reviewed against the closed enum **Implemented / Partially Implemented / Architecturally Defined / Planned / Out of Scope / Evidence Pending**, grounded strictly in the Layer 1 / Layer 2 evidence already cited above and in `06_EVIDENCE_TREE.md` — no theme is assigned a status without a specific citation already present elsewhere in this project. No theme in this review reached "Implemented" (unqualified) or "Out of Scope" — every theme with any evidence at all carries at least one open caveat, per the citations below.
+
+| ID | Theme | Status | Grounding citation |
+|---|---|---|---|
+| R1 | Human-in-the-loop oversight | Partially Implemented | `06_EVIDENCE_TREE.md` R1 — tested code exists; IC_20260708_004 (Open) shows an enforcement gap |
+| R2 | Traceability / auditable rationale | Partially Implemented | `06_EVIDENCE_TREE.md` R2 — real Ed25519 chain; README/entry-point mismatch in `mocka-public`/`mocka-transparency` |
+| R3 | Deterministic behavior & fail-safe | Architecturally Defined | Non-executing Decision Layer is a stated design principle; TODO_412 (internal) records no approval-gate logic exists outside simple path-exclusion |
+| R4 | Graceful, transparent degradation | Architecturally Defined | `shadow_Movement` documented publicly; TODO_444 (internal) shows recovery implementation blocked pending Human Gate authorization |
+| R5 | Adversarial robustness (lifecycle) | Evidence Pending | No dedicated module found in either layer; TODO_430 (internal, Open) records an unmitigated related risk, not a control |
+| R6 | TEVV | Partially Implemented | `06_EVIDENCE_TREE.md` R6 — 95 test files + 6 CI workflows present; live CI run history not independently confirmed |
+| R7 | Explainability | Evidence Pending | Prose references only in `mocka-runtime` `ARCHITECTURE.md`; no code or internal record found |
+| R8 | Supply-chain visibility | Partially Implemented | `mocka-transparency` — real signing code; README's unified verifier does not exist |
+| R9 | Terminology harmonization | Architecturally Defined | `mocka-civilization` — doctrine only, no code |
+| R10 | Governance responsiveness / compliance monitoring | Partially Implemented | COMMAND CENTER exists publicly; IC_20260707_005 (internal, Open) documents a display-layer staleness defect in the same component |
+| R11 | Monitoring outside validity regions / drift | Partially Implemented | Real drift-detection code exists but is scoped to ledger/record integrity, not the NIST framing of live operational/environmental drift — see `07_GAP_ANALYSIS.md` §4 |
+| R12 | Practicality across expertise levels | Evidence Pending | No code, design document, or internal record found in either layer |
